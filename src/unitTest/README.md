@@ -23,17 +23,17 @@ In this module you'll learn the basics of unit testing, you'll start by setting 
 - **Step 4:** Configure `vitest` in `vite.config.ts`
   Open `vite.config.ts` file and add the test configurations
 
-```
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+```js
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/setupTests.ts',
+    environment: "jsdom",
+    setupFiles: "./src/setupTests.ts",
   },
 });
 ```
@@ -48,9 +48,9 @@ That'll be all for now, Let's create a simple component and write a test for it
 
 First create a components folder and create a folder inside of that and call Hello, inside of that create and index file. The structure should look like this `src/components/Hello/index.tsx`. Inside the `index.tsx` file add this
 
-```
+```js
 type HelloProps = {
-  name: string;
+  name: string,
 };
 
 function Hello({ name }: HelloProps) {
@@ -64,13 +64,13 @@ This is a basic component with a prop, let's test this to ensure that it renders
 
 create a test file in the component `src/components/Hello/Hello.test.tsx` and add the following:
 
-```
-import { render, screen } from '@testing-library/react';
-import Hello from '.';
+```js
+import { render, screen } from "@testing-library/react";
+import Hello from ".";
 
-test('renders the correct greeting text', () => {
+test("renders the correct greeting text", () => {
   render(<Hello name="World" />);
-  const greetingElement = screen.getByText('Hello, World!');
+  const greetingElement = screen.getByText("Hello, World!");
   expect(greetingElement).toBeInTheDocument();
 });
 ```

@@ -45,6 +45,8 @@ End-to-End (E2E) tests simulates a real user interacting with the application to
 
 An example of E2E test could be testing the login process of an application, including entering credentials, form submission, and verifying redirection. Some tools used for E2E testing are [Cypress](https://www.cypress.io/), [Playwright](https://playwright.dev/), [Puppeteer](https://pptr.dev/)
 
+#
+
 When you're learning tests, a common phrase you'll hear is **Test Driven Deelopment (TDD)**
 
 ## What is Test Driven Development (TDD)?

@@ -75,6 +75,8 @@ test("renders the correct greeting text", () => {
 });
 ```
 
+Next run `yarn vitest` OR `npx vitest` to run your test
+
 ### Code explationation
 
 - **test** The test keyword is used to define a single test case.

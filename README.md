@@ -1,4 +1,4 @@
-# Frontend Testing in React + Typescript using Vitest
+# Frontend Testing in React + Typescript using Vitest (WIP)
 
 This repo is a starter kit for anyone who is looking to learn FE testing. If you're a trying to understand FE testing and don't know where to start from then this tutorial is for you.
 
@@ -47,9 +47,11 @@ TDD is a development approach wehre you write tests before writing the actual so
 
 In this tutorial, we'll start with Unit test and explore different scenerios, earn how to write simple unit tests for React components (of course) then move up to understanding how to mock functions, API calls, and simulate events. Then, we'll move on to Integration Testing, test common scenarios like user input, state changes, and rendering conditions. And then we'll go on to explore E2E testing, we'll setup a simple application to pratice E2E and ensure we **cover _accessibility_ considerations**
 
-## Steps
+## Tutorial Structure
 
-1. [Unit tests](src/unitTest/README.md)
+To follow along this tutorial, you can start from the top of the list and each examples in the different sections and work your way down.
+
+- [Unit tests](src/unitTest/README.md)
 
 # Some Recommended Resources
 

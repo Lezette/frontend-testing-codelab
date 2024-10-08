@@ -27,15 +27,21 @@ Each type of test serves a different purpose and is used at different stages of 
 - Integration Testing: Testing how multiple components work together.
 - End-to-End (E2E) Testing: Testing the entire application flow from the user’s perspective.
 
-- **Unit tests** focus on testing individual pieces of functionality in isolation, like a function, a component, or a method. The goal of unit testing is to ensure that each unit of code works as expected on its own. Unit tests are done during the development process of the application.
+### Unit Testing
+
+Unit tests focus on testing individual pieces of functionality in isolation, like a function, a component, or a method. The goal of unit testing is to ensure that each unit of code works as expected on its own. Unit tests are done during the development process of the application.
 
 An example of using unit test when to write a unit test is to test that a React button component renders properly or a component renders the desired format after an api call. Some common tools used for unit testing are [Jest](https://jestjs.io/), [Mocha](https://mochajs.org/), [Jasmine](https://jasmine.github.io/).
 
-- **Integration tests** checks how multiple units work together. This involves testing the interaction between components, modules, or systems. The goal of integration testing is to test that multiple parts of your application work together correctly. Integration tests are used after individual components are built to verify combined functionality.
+### Integration Testing
+
+Integration tests checks how multiple units work together. This involves testing the interaction between components, modules, or systems. The goal of integration testing is to test that multiple parts of your application work together correctly. Integration tests are used after individual components are built to verify combined functionality.
 
 An example of integration test could be testing a form component that interacts with multiple child components (e.g., an input field and a submit button). A common tools used for integration test is [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/).
 
-- **End-to-End (E2E) tests** simulates a real user interacting with the application to test full workflows and features. The goal of E2E testing is to check that the entire flow of your application works as intended from start to finish. E2E Tests are usually run at the end of the development cycle to confirm everything works as expected by replicating a real-world scenario.
+### End-to-End (E2E) Testing
+
+End-to-End (E2E) tests simulates a real user interacting with the application to test full workflows and features. The goal of E2E testing is to check that the entire flow of your application works as intended from start to finish. E2E Tests are usually run at the end of the development cycle to confirm everything works as expected by replicating a real-world scenario.
 
 An example of E2E test could be testing the login process of an application, including entering credentials, form submission, and verifying redirection. Some tools used for E2E testing are [Cypress](https://www.cypress.io/), [Playwright](https://playwright.dev/), [Puppeteer](https://pptr.dev/)
 

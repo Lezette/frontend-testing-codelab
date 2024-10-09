@@ -3,21 +3,15 @@ import { useState, useEffect } from 'react'
 function App() {
   const [count, setCount] = useState(0)
 
-  const increment = () => setCount(prev => prev + 1);
-
     useEffect(() => {
     document.title = `Count: ${count}`;
   }, [count]);
 
   return (
     <div className="card">
-      <h1>Count: {count}</h1>
-      <button onClick={increment}>
-        increment
-      </button>
-      {/* <button onClick={increment} name='increment'>
+      <button onClick={() => setCount(count + 1)}>
         count is {count}
-      </button> */}
+      </button>
 
       
     </div>

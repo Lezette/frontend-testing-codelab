@@ -138,7 +138,7 @@ To test this component, we'll focus on three thing
 - On click of the button the content gets updated to 'count is 1'
 - On click of the button the document.title gets updated to 'Count: 1'
 
-So let's create a test for this- Create a test file `src/component/Counter/counter.test.tsx`
+So let's create a test for this. Create a test file `src/component/Counter/counter.test.tsx`
 
 ```tsx
 import { render, screen, fireEvent } from "@testing-library/react";
@@ -171,7 +171,7 @@ test("should update the document title on button click", () => {
 
 Next, let's see how to test on a component that uses useEffect to make API calls, For simplicity sake we'll use the JSONPlaceholder API.
 
-Create a UserProfile component in `/src/components/UserProfile/index.tsx` and just add a basic user profile view
+Create a UserProfile component in and add a basic user profile view
 
 ```tsx
 import { useEffect, useState } from "react";
@@ -224,7 +224,7 @@ import { vi, Mock } from "vitest";
 beforeEach(() => {
   global.fetch = vi.fn(() =>
     Promise.resolve({
-      json: () => Promise.resolve({ id: 1, name: "Nola Smith" }),
+      json: () => Promise.resolve({ id: 1, name: "Leanne Graham" }),
     })
   ) as Mock;
 });
@@ -241,7 +241,7 @@ test("displays loading initially", () => {
 test("displays user name after data is loaded", async () => {
   render(<UserProfile />);
   await waitFor(() =>
-    expect(screen.getByText(/Nola Smith/i)).toBeInTheDocument()
+    expect(screen.getByText(/Leanne Graham/i)).toBeInTheDocument()
   );
 });
 
@@ -288,3 +288,61 @@ This way, when your component calls `fetch` to get user data, it doesn’t actua
 `mockImplementationOnce` sets up a one-time implementation for a mock function. After it’s called once, it reverts to the default behavior of `vi.fn()`.
 
 In the test, `(global.fetch as Mock).mockImplementationOnce()` is telling `fetch` to return `null` for a specific test in this case a missing user.
+
+## Testing `useEffect` with dependencies
+
+Before we continue here let's do a quick recap on `useEffect`
+
+- useEffect is a React hook that allows you to run side effects in function components.
+- It runs after the component renders and re-runs if its dependencies change.
+- The dependency array tells React when to re-run the effect. If any of the values in the dependency changes, the effect is triggered again.
+
+The goal here is to understand how to write effective test for `useEffect` when its dependency array changes.
+
+So let's create a component that fetches data based on a `userId` prop and when `userId` changes, `useEffect` re-runs and fetches the new user’s data
+
+```tsx
+import React, { useState, useEffect } from "react";
+
+type User = {
+  id: number;
+  name: string;
+};
+
+type UserDetailProps = {
+  userId: number;
+};
+
+const UserDetail: React.FC<UserDetailProps> = ({ userId }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Mock API call to fetch user data
+    const fetchUser = async () => {
+      setLoading(true);
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/users/${userId}`
+      );
+      const data = await response.json();
+      setUser(data);
+      setLoading(false);
+    };
+
+    fetchUser();
+  }, [userId]);
+
+  if (loading) return <p>Loading...</p>;
+  if (!user) return <p>No user found</p>;
+
+  return (
+    <div>
+      <h2>User Detail</h2>
+      <p>ID: {user.id}</p>
+      <p>Name: {user.name}</p>
+    </div>
+  );
+};
+
+export default UserDetail;
+```

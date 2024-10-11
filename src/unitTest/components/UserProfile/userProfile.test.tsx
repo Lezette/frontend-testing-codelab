@@ -4,13 +4,13 @@ import { vi, Mock } from 'vitest';
 
 beforeEach(() => {
   global.fetch = vi.fn(() => Promise.resolve({
-    json: () => Promise.resolve({ id: 1, name: 'John Doe' }),
+    json: () => Promise.resolve({ id: 1, name: 'Leanne Graham' }),
   })
   ) as Mock;
 });
 
 afterEach(() => {
-  vi.clearAllMocks(); // Use `vi.clearAllMocks()` instead of Jest's clearAllMocks
+  vi.clearAllMocks();
 });
 
 test('displays loading initially', () => {
@@ -20,7 +20,7 @@ test('displays loading initially', () => {
 
 test('displays user name after data is loaded', async () => {
   render(<UserProfile />);
-  await waitFor(() => expect(screen.getByText(/John Doe/i)).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByText(/Leanne Graham/i)).toBeInTheDocument());
 });
 
 test('handles missing user gracefully', async () => {

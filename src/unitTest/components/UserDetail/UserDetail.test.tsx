@@ -10,47 +10,57 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-test('renders loading initially', () => {
+/*
+
+Test to consider
+--------------------
+// shows loading initially
+// displays user info after fetch is complete
+// update user data when the userId changes
+// handles empty result
+
+*/
+
+test('shows loading initially',  () => {
   (global.fetch as Mock).mockResolvedValueOnce({
-    json: () => Promise.resolve({ id: 1, name: 'John Doe' }),
+    json: () => Promise.resolve({ id: 1, name: 'Cat Burns' })
+  })
+
+  render(<UserDetail userId={1} />)
+  expect(screen.getByText(/Loading.../i)).toBeInTheDocument()
+})
+
+ 
+test('displays user info after fetch is complete', async () => { 
+  (global.fetch as Mock).mockResolvedValueOnce({
+    json: () => Promise.resolve({ id: 1, name: 'Cat Burns' })
+  })
+  
+  render(<UserDetail userId={1} />)
+  await waitFor(() => expect(screen.getByText(/Name: Cat Burns/i)).toBeInTheDocument())
+})
+
+test('update user data when the userId changes', async () => { 
+  (global.fetch as Mock).mockResolvedValueOnce({
+    json: () => Promise.resolve({ id: 1, name: 'Cat Burns' })
   });
 
-  render(<UserDetail userId={1} />);
-  expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
-});
+  const { rerender } = render(<UserDetail userId={1} />)
+  await waitFor(() => expect(screen.getByText(/Name: Cat Burns/i)).toBeInTheDocument());
 
-test('displays user data after fetch is complete', async () => {
   (global.fetch as Mock).mockResolvedValueOnce({
-    json: () => Promise.resolve({ id: 1, name: 'John Doe' }),
+    json: () => Promise.resolve({ id: 2, name: 'Joy Odungoke' })
   });
 
-  render(<UserDetail userId={1} />);
-  await waitFor(() => expect(screen.getByText(/John Doe/i)).toBeInTheDocument());
-});
+  rerender(<UserDetail userId={2} />)
+  await waitFor(() => expect(screen.getByText(/Name: Joy Odungoke/i)).toBeInTheDocument());
+})
 
-test('fetches new user data when userId changes', async () => {
-  // Initial render with userId=1
+test('handles empty result', async () => { 
   (global.fetch as Mock).mockResolvedValueOnce({
-    json: () => Promise.resolve({ id: 1, name: 'John Doe' }),
-  });
+    json: () => Promise.resolve(null)
+  })
 
-  const { rerender } = render(<UserDetail userId={1} />);
-  await waitFor(() => expect(screen.getByText(/John Doe/i)).toBeInTheDocument());
-
-  // Update userId to 2
-  (global.fetch as Mock).mockResolvedValueOnce({
-    json: () => Promise.resolve({ id: 2, name: 'Jane Doe' }),
-  });
-
-  rerender(<UserDetail userId={2} />);
-  await waitFor(() => expect(screen.getByText(/Jane Doe/i)).toBeInTheDocument());
-});
-
-test('handles missing user data gracefully', async () => {
-  (global.fetch as Mock).mockResolvedValueOnce({
-    json: () => Promise.resolve(null),
-  });
-
-  render(<UserDetail userId={999} />);
-  await waitFor(() => expect(screen.getByText(/No user found/i)).toBeInTheDocument());
-});
+  render(<UserDetail userId={1} />)
+  await waitFor(() => expect(screen.getByText(/No user found/i)).toBeInTheDocument())
+ })

@@ -169,7 +169,7 @@ test("should update the document title on button click", () => {
 
 ### Stateful Component with useEffect and API Calls
 
-Next, let's see how to test on a component that uses useEffect to make API calls, For simplicity sake we'll use the JSONPlaceholder API.
+Next, let's see how to test on a component that uses useEffect to make API calls, For simplicity sake we'll use the [JSONPlaceholder](https://jsonplaceholder.typicode.com/) API.
 
 Create a UserProfile component in and add a basic user profile view
 
@@ -346,3 +346,99 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId }) => {
 
 export default UserDetail;
 ```
+
+Here's a list of what we'll test for
+
+- shows loading initially
+- displays user info after fetch is complete
+- update user data when the userId changes
+- handles empty result
+
+Based on the previous example can you try running the test yourself before checking the answer?
+
+Here's what you'll need to do
+
+- Mock the api call and response
+- Clear the mock after each call
+- For the test to "update user data when the userId changes" you'll need to rerender the app and make a mock request twice passing different userId
+
+### The test
+
+```tsx
+import { render, screen, waitFor } from "@testing-library/react";
+import UserDetail from ".";
+import { vi, Mock } from "vitest";
+
+beforeEach(() => {
+  global.fetch = vi.fn();
+});
+
+afterEach(() => {
+  vi.clearAllMocks();
+});
+
+test("shows loading initially", () => {
+  (global.fetch as Mock).mockResolvedValueOnce({
+    json: () => Promise.resolve({ id: 1, name: "Cat Burns" }),
+  });
+
+  render(<UserDetail userId={1} />);
+  expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
+});
+
+test("displays user info after fetch is complete", async () => {
+  (global.fetch as Mock).mockResolvedValueOnce({
+    json: () => Promise.resolve({ id: 1, name: "Cat Burns" }),
+  });
+
+  render(<UserDetail userId={1} />);
+  await waitFor(() =>
+    expect(screen.getByText(/Name: Cat Burns/i)).toBeInTheDocument()
+  );
+});
+
+test("update user data when the userId changes", async () => {
+  (global.fetch as Mock).mockResolvedValueOnce({
+    json: () => Promise.resolve({ id: 1, name: "Cat Burns" }),
+  });
+
+  const { rerender } = render(<UserDetail userId={1} />);
+  // rerender is used here to re-render the component with different props without unmounting it.
+  await waitFor(() =>
+    expect(screen.getByText(/Name: Cat Burns/i)).toBeInTheDocument()
+  );
+
+  (global.fetch as Mock).mockResolvedValueOnce({
+    json: () => Promise.resolve({ id: 2, name: "Joy Odungoke" }),
+  });
+
+  rerender(<UserDetail userId={2} />);
+  await waitFor(() =>
+    expect(screen.getByText(/Name: Joy Odungoke/i)).toBeInTheDocument()
+  );
+});
+
+test("handles empty result", async () => {
+  (global.fetch as Mock).mockResolvedValueOnce({
+    json: () => Promise.resolve(null),
+  });
+
+  render(<UserDetail userId={1} />);
+  await waitFor(() =>
+    expect(screen.getByText(/No user found/i)).toBeInTheDocument()
+  );
+});
+```
+
+In this solution, I added individual mock to each test to show that your mock doesn't always have to be in one before each, especially if you won't be using the sane implementation across all tests.
+
+**Using `rerender`**
+`rerender` is used here to re-render the component with different props without unmounting it. This is useful for testing useEffect’s behavior when its dependency changes.
+
+In the example above we only used one dependency, Which makes the test kinda straightfroward, But what of when we're working with multiple dependencies? It's the same process for that usecase as well.
+
+#### Testing `useEffect` with Multiple Dependencies
+
+When a component has multiple dependencies in useEffect, the effect runs when any of the dependencies change. So let's look at an example of that and run a test for this.
+
+Let's create a simple component called UserProfileWithStatus:
